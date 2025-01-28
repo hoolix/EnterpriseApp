@@ -14,7 +14,7 @@ const StepContext = () => {
         openingTime: '',
         closingTime: '',
         averageTime: '',
-        serviceProvider: '',
+        serviceProviders: '',
     });
 
     const submitData = async (e) => {
@@ -27,7 +27,7 @@ const StepContext = () => {
             const response = await axios.post(
                 "https://v1.nocodeapi.com/chathura/google_sheets/BxSGAXDtHNvwxqGV?tabId=Sheet1",
                 JSON.stringify([
-                    [userData.businessName, userData.address1, userData.address2, userData.city, userData.openingTime, userData.closingTime, userData.averageTime, userData.serviceProvider, userData.workingDays, new Date().toLocaleString()]
+                    [userData.businessName, userData.address1, userData.address2, userData.city, userData.openingTime, userData.closingTime, userData.averageTime, userData.serviceProviders, userData.workingDays, new Date().toLocaleString()]
                 ]),
                 {
                     headers: {

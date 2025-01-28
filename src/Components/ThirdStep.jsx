@@ -1,42 +1,53 @@
 import { Box, Button, Stack, TextField } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { multiStepContext } from "../StepContext.jsx";
 
 function ThirdStep() {
     const { setStep, userData, setUserData, submitData } = useContext(multiStepContext);
-    const [serviceProviders, setServiceProviders] = useState(userData.serviceProviders || [""]);
 
+    // Initialize serviceProviders state with existing data from userData or default empty array
+    const [serviceProviders, setServiceProviders] = useState(userData.serviceProviders ? userData.serviceProviders.split(', ') : [""]);
+
+    // Handle changes in the service provider fields
     const handleServiceProviderChange = (index, value) => {
         const updatedProviders = [...serviceProviders];
         updatedProviders[index] = value;
 
-        // Join the array into a comma-separated string
+        // Join the updated array into a string with commas
         const providersString = updatedProviders.filter(Boolean).join(', ');
 
-        // Update the states
+        // Update the serviceProviders state
         setServiceProviders(updatedProviders);
-        setUserData({ ...userData, serviceProvider: providersString });
+
+        // Update userData with the new list of service providers as a string
+        setUserData({ ...userData, serviceProviders: providersString });
     };
 
+    // Add a new empty field for service provider
     const addServiceProviderField = () => {
         setServiceProviders([...serviceProviders, ""]);
     };
 
-
+    // Update serviceProviders from userData when userData changes
+    useEffect(() => {
+        if (userData.serviceProviders) {
+            setServiceProviders(userData.serviceProviders.split(', '));
+        }
+    }, [userData]);
 
     return (
         <Stack spacing={3} sx={{ width: "70vw", margin: '0 auto' }}>
             {serviceProviders.map((provider, index) => (
-                    <TextField
-                        label={`Service Provider ${index + 1}`}
-                        margin="normal"
-                        variant="outlined"
-                        color="secondary"
-                        value={provider}
-                        onChange={(e) => handleServiceProviderChange(index, e.target.value)}
-                        fullWidth
-                    />
-
+                <TextField
+                    key={`provider-${index}`}  // Use index for stable key
+                    label={`Service Provider ${index + 1}`}
+                    margin="normal"
+                    variant="outlined"
+                    color="secondary"
+                    value={provider}
+                    onChange={(e) => handleServiceProviderChange(index, e.target.value)}
+                    fullWidth
+                />
             ))}
 
             <Button
